@@ -1,0 +1,16 @@
+/*
+ *
+ * MMM-bunq
+ *
+ * Cedrik Hoffmann
+ * MIT Licensed.
+ *
+ * Custom here your css module
+ *
+ */
+
+#saldo {
+  font-weight: bold;
+  font-size: 25px;
+  text-transform: uppercase;
+}

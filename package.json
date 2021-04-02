@@ -1,0 +1,27 @@
+{
+  "name": "MMM-bunq",
+  "version": "1.0.0",
+  "description": "Show Bunt Information on the MagicMirror",
+  "main": "MMM-bunq.js",
+  "author": "Cedrik Hoffmann",
+  "license": "MIT",
+  "devDependencies": {
+    "crypto": "latest",
+    "electron-rebuild": "^2.3.2",
+    "grunt": "latest",
+    "grunt-eslint": "latest",
+    "grunt-jsonlint": "latest",
+    "grunt-markdownlint": "^1.0.13",
+    "grunt-stylelint": "latest",
+    "grunt-yamllint": "latest",
+    "node-fetch": "^2.6.1",
+    "stylelint-config-standard": "latest",
+    "time-grunt": "latest"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/.bin/electron-rebuild"
+  },
+  "dependencies": {
+    "request": "latest"
+  }
+}
