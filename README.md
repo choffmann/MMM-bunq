@@ -2,7 +2,7 @@
 
 This is a module for the [MagicMirror²](https://github.com/MichMich/MagicMirror/).
 
-This module will show your [bunq](https://www.bunq.com/) account balance on the smart mirror. All you need is a Bunq account. The use of the API is free 🙌
+This module will show your [bunq](https://www.bunq.com/) account balance on the smart mirror. All you need is a bunq account. The use of the API is free 🙌
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
@@ -14,13 +14,13 @@ This module is pretty simple to set up. You simply need to clone the module into
 
 ```
 $ cd MagicMirror/modules
-$ git clone https://github.com/choffmann/MMM-Bunq.git
+$ git clone https://github.com/choffmann/MMM-bunq.git
 ```
 
 After you clone the repositories, you have to install the `node modules`
 
 ```
-$ cd ./MMM-Bunq
+$ cd ./MMM-bunq
 $ npm install
 ```
 
@@ -50,8 +50,10 @@ var config = {
 
 | Option                | Description                                                                                             |
 | --------------------- | ------------------------------------------------------------------------------------------------------- |
-| `apiKey`              | _Required_ Your Bunq API Key goes here.                                                                 |
-| `monetaryDiscription` | _Required_ Description of your Bunq Monetary Account, with will appear on the screen.                   |
-| `title`               | _Optional_ Title in front of <br><br>**Type:** `String` <br>Default `Balance`                           |
+| `apiKey`              | _Required_ Your bunq API Key goes here.                                                                 |
+| `monetaryDiscription` | _Required_ Description of your bunq Monetary Account, with will appear on the screen.                   |
+| `title`               | _Optional_ Title in front of the balance <br><br>**Type:** `String` <br>Default `Balance`               |
 | `unit`                | _Optional_ Unit of the balance <br><br>**Type:** `String` <br>Default `€` (Euro)                        |
 | `updateInterval`      | _Optional_ Refresh rate <br><br>**Type:** `int`(milliseconds) <br>Default 60000 milliseconds (1 minute) |
+
+NOTE: `monetaryDiscription` is the title of the account, which is needed to show the balance of this specific account. You can find the description in the bunq app
