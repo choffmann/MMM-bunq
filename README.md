@@ -2,7 +2,7 @@
 
 This is a module for the [MagicMirror²](https://github.com/MichMich/MagicMirror/).
 
-This module will show your [Bunq](https://www.bunq.com/) account balance on the smart mirror. All you need is a Bunq account. The use of the API is free 🙌
+This module will show your [bunq](https://www.bunq.com/) account balance on the smart mirror. All you need is a Bunq account. The use of the API is free 🙌
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
@@ -26,7 +26,7 @@ $ npm install
 
 ## Get your API Key
 
-To use this module, you need a API key from Bunq. You can create an API key either in our [developer portal](https://developer.bunq.com/) or in the bunq app (Profile → Security & Settings → Developers → API keys).
+To use this module, you need a API key from bunq. You can create an API key either in bunq`s [developer portal](https://developer.bunq.com/) or in the bunq app (Profile → Security & Settings → Developers → API keys).
 
 ## Using the module
 
@@ -51,5 +51,6 @@ var config = {
 | --------------------- | ------------------------------------------------------------------------------------------------------- |
 | `apiKey`              | _Required_ Your Bunq API Key goes here.                                                                 |
 | `monetaryDiscription` | _Required_ Description of your Bunq Monetary Account, with will appear on the screen.                   |
-| `title`               | _Optional_ Title in front of                                                                            |
-| `updateInterval`      | _Optional_ Refresh Rate <br><br>**Type:** `int`(milliseconds) <br>Default 60000 milliseconds (1 minute) |
+| `title`               | _Optional_ Title in front of <br><br>**Type:** `String` <br>Default `Balance`                           |
+| `unit`                | _Optional_ Unit of the balance <br><br>**Type:** `String` <br>Default `€` (Euro)                        |
+| `updateInterval`      | _Optional_ Refresh rate <br><br>**Type:** `int`(milliseconds) <br>Default 60000 milliseconds (1 minute) |
