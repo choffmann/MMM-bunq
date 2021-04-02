@@ -6,6 +6,8 @@ This module will show your [Bunq](https://www.bunq.com/) account balance on the 
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
+![Screenshot](img/img.png)
+
 ## Installation
 
 This module is pretty simple to set up. You simply need to clone the module into your modules folder (like other modules).
