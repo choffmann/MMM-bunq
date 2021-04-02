@@ -13,7 +13,7 @@ const request = require('request');
 module.exports = NodeHelper.create({
 
 	start: function () {
-		this.monetaryDiscription = null;
+		this.monetaryDescription = null;
 		this.apiKey = null;
 		this.publicKey = null;
 		this.privateKey = null;
@@ -27,7 +27,7 @@ module.exports = NodeHelper.create({
 		switch (notification) {
 			case "HERE_IS_YOUR_CONFIG":
 				this.apiKey = payload.apiKey;
-				this.monetaryDiscription = payload.monetaryDiscription;
+				this.monetaryDescription = payload.monetaryDescription;
 				this.crypto();
 				break;
 			case "UPDATE_PLEASE":
@@ -160,7 +160,7 @@ module.exports = NodeHelper.create({
 		let accounts = data.Response;
 		let isFound = false;
 		for (let i = 0; i < accounts.length && !isFound; i++) {
-			if (accounts[i].MonetaryAccountBank.description != undefined && accounts[i].MonetaryAccountBank.description === this.monetaryDiscription) {
+			if (accounts[i].MonetaryAccountBank.description != undefined && accounts[i].MonetaryAccountBank.description === this.monetaryDescription) {
 				this.sendSocketNotification("HERE_IS_FINAL_SALDO", accounts[i].MonetaryAccountBank.balance.value);
 				isFound = true;
 			}
