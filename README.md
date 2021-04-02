@@ -56,4 +56,4 @@ var config = {
 | `unit`                | _Optional_ Unit of the balance <br><br>**Type:** `String` <br>Default `€` (Euro)                                       |
 | `updateInterval`      | _Optional_ Refresh rate <br><br>**Type:** `int`(milliseconds) <br>Default 60000 milliseconds (1 minute)                |
 
-NOTE: `monetaryDiscription` is the title of the account, which is needed to show the balance of this specific account. You can find the description in the bunq app
+NOTE: `monetaryDiscription` is the title of the account, which is needed to show the balance of this specific account. You can find the description/title in the bunq app.
