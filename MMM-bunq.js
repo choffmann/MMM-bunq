@@ -13,6 +13,7 @@ Module.register("MMM-bunq", {
 		apiKey: "",
 		updateInterval: 60000,
 		title: "balance",
+		unit: "€",
 	},
 
 	requiresVersion: "2.1.0", // Required version of MagicMirror
@@ -33,7 +34,7 @@ Module.register("MMM-bunq", {
 		// create element wrapper for show into the module
 		var wrapper = document.createElement("div");
 		wrapper.id = "saldo";
-		wrapper.innerText = this.config.title + ": " + this.finalSaldo + "€";
+		wrapper.innerText = this.config.title + ": " + this.finalSaldo + this.config.unit;
 
 		return wrapper;
 	},
