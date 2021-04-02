@@ -48,12 +48,12 @@ var config = {
 
 ## Configuration options
 
-| Option                | Description                                                                                             |
-| --------------------- | ------------------------------------------------------------------------------------------------------- |
-| `apiKey`              | _Required_ Your bunq API Key goes here.                                                                 |
-| `monetaryDiscription` | _Required_ Description of your bunq Monetary Account, with will appear on the screen.                   |
-| `title`               | _Optional_ Title in front of the balance <br><br>**Type:** `String` <br>Default `Balance`               |
-| `unit`                | _Optional_ Unit of the balance <br><br>**Type:** `String` <br>Default `€` (Euro)                        |
-| `updateInterval`      | _Optional_ Refresh rate <br><br>**Type:** `int`(milliseconds) <br>Default 60000 milliseconds (1 minute) |
+| Option                | Description                                                                                                            |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `apiKey`              | _Required_ Your bunq API Key goes here.                                                                                |
+| `monetaryDiscription` | _Required_ Description of your bunq Monetary Account, with will appear on the screen.                                  |
+| `title`               | _Optional_ Title in front of the balance. The tilte will be uppercase <br><br>**Type:** `String` <br>Default `Balance` |
+| `unit`                | _Optional_ Unit of the balance <br><br>**Type:** `String` <br>Default `€` (Euro)                                       |
+| `updateInterval`      | _Optional_ Refresh rate <br><br>**Type:** `int`(milliseconds) <br>Default 60000 milliseconds (1 minute)                |
 
 NOTE: `monetaryDiscription` is the title of the account, which is needed to show the balance of this specific account. You can find the description in the bunq app
