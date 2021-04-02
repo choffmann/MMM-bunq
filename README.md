@@ -37,6 +37,7 @@ var config = {
   modules: [
     {
       module: "MMM-bunq",
+      header: "Joint Account",
       config: {
         // See below for configurable options
       }
