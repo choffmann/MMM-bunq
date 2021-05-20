@@ -21,6 +21,7 @@ module.exports = NodeHelper.create({
 		this.userId = null;
 		this.sessionToken = null;
 		this.deviceId = null;
+		this.iban = null
 	},
 
 	socketNotificationReceived: function (notification, payload) {
@@ -28,6 +29,7 @@ module.exports = NodeHelper.create({
 			case "HERE_IS_YOUR_CONFIG":
 				this.apiKey = payload.apiKey;
 				this.monetaryDescription = payload.monetaryDescription;
+				this.iban = payload.iban;
 				this.crypto();
 				break;
 			case "UPDATE_PLEASE":
@@ -160,9 +162,19 @@ module.exports = NodeHelper.create({
 		let accounts = data.Response;
 		let isFound = false;
 		for (let i = 0; i < accounts.length && !isFound; i++) {
-			if (accounts[i].MonetaryAccountBank.description != undefined && accounts[i].MonetaryAccountBank.description === this.monetaryDescription) {
-				this.sendSocketNotification("HERE_IS_FINAL_SALDO", accounts[i].MonetaryAccountBank.balance.value);
-				isFound = true;
+			if (this.iban !== "") {
+				for (let j = 0; j < accounts[i].MonetaryAccountBank.alias.length && !isFound; j++) {
+					if (accounts[i].MonetaryAccountBank.alias[j].type === "IBAN" && accounts[i].MonetaryAccountBank.alias[j].value === this.iban) {
+						this.sendSocketNotification("HERE_IS_FINAL_SALDO", accounts[i].MonetaryAccountBank.balance.value);
+						isFound = true;
+					}
+				}
+			} else {
+				// OLD!!!
+				if (accounts[i].MonetaryAccountBank.description != undefined && accounts[i].MonetaryAccountBank.description === this.monetaryDescription) {
+					this.sendSocketNotification("HERE_IS_FINAL_SALDO", accounts[i].MonetaryAccountBank.balance.value);
+					isFound = true;
+				}
 			}
 		}
 	},

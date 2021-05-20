@@ -10,6 +10,7 @@
 Module.register("MMM-bunq", {
 	defaults: {
 		monetaryDescription: "",
+		iban: "",
 		apiKey: "",
 		updateInterval: 60000,
 		title: "balance",
