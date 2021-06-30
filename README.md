@@ -46,19 +46,19 @@ var config = {
       header: "BUNQ Account",
       config: {
         apiKey: "YOUR_API_KEY",
-		monetaryAccounts: [
-			{
-				iban: "YOUR_IBAN",
-				isSavingAccount: false,
-				showTitle: false
-			},
-			{
-				title: "Joint Account",
-				iban: "YOUR_IBAN",
-				isSavingAccount: true
-			}
-			// ...
-		],
+	monetaryAccounts: [
+		{
+			iban: "YOUR_IBAN",
+			isSavingAccount: false,
+			showTitle: false
+		},
+		{
+			title: "Joint Account",
+			iban: "YOUR_IBAN",
+			isSavingAccount: true
+		}
+		// ...
+	],
       }
     }
   ]
@@ -73,7 +73,7 @@ var config = {
 | `iban`                | **_Required_** IBAN of your bunq monetary account, which will appear on the screen.                                        |
 | `monetaryAccounts`    | **_Optional_**  If you want to show more accounts, you can define an array with IBAN's <br><br>**Type:** `Array` |
 | `monetaryAccounts.title` | **_Optional_** Define a Title for this account. If you don't define a title, the title from BUNQ will be shown. You can hide the title with `monetaryAccounts.showTitle == false` <br><br>**Type:** `String` <br>Default `Title from BUNQ`|
-| `monetaryAccounts.showTitle` | Hide the title of the account. <br><br>**Type:** `Boolean` <br>Default `true`
+| `monetaryAccounts.showTitle` | **_Optional_** Hide the title of the account. <br><br>**Type:** `Boolean` <br>Default `true`
 | `title`               | **_Optional_** Title in front of the balance. The title will be uppercase <br><br>**Type:** `String` <br>Default `Balance` |
 | `unit`                | **_Optional_** Unit of the balance <br><br>**Type:** `String` <br>Default `€` (Euro)                                       |
 | `updateInterval`      | **_Optional_** Refresh rate <br><br>**Type:** `int`(milliseconds) <br>Default 60000 milliseconds (1 minute)                |
