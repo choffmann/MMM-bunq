@@ -34,9 +34,6 @@ module.exports = NodeHelper.create({
 				this.monetaryDescription = payload.monetaryDescription;
 				this.iban = payload.iban;
 				this.monetaryAccounts = payload.monetaryAccounts
-				payload.monetaryAccounts.forEach(element => {
-					console.log(element)
-				});
 				this.crypto();
 				break;
 			case "UPDATE_PLEASE":
@@ -201,6 +198,7 @@ module.exports = NodeHelper.create({
 	handleSaldoData: function (data) {
 		let accounts = data.Response;
 		let isFound = false;
+		this.finalData = []
 
 		if (this.monetaryAccounts[0].iban !== null) {
 			this.monetaryAccounts.forEach(monetaryAccount => {
@@ -211,14 +209,26 @@ module.exports = NodeHelper.create({
 						if (account.MonetaryAccountBank !== undefined) {
 							account.MonetaryAccountBank.alias.forEach(alias => {
 								if (alias.type === "IBAN" && alias.value === monetaryAccount.iban) {
-									this.finalData = [
-										...this.finalData,
-										{
-											isSavingAccount: false,
-											title: account.MonetaryAccountBank.description,
-											saldo: account.MonetaryAccountBank.balance.value
-										}
-									]
+									if (monetaryAccount.title === undefined) {
+										this.finalData = [
+											...this.finalData,
+											{
+												isSavingAccount: false,
+												title: account.MonetaryAccountBank.description,
+												saldo: account.MonetaryAccountBank.balance.value
+											}
+										]
+									} else {
+										this.finalData = [
+											...this.finalData,
+											{
+												isSavingAccount: false,
+												title: monetaryAccount.title,
+												saldo: account.MonetaryAccountBank.balance.value
+											}
+										]
+									}
+
 								}
 							})
 						}
