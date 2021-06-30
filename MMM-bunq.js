@@ -1,5 +1,4 @@
 /* global Module */
-
 /* Magic Mirror
  * Module: MMM-bunq
  *
@@ -9,6 +8,13 @@
 
 Module.register("MMM-bunq", {
 	defaults: {
+		monetaryAccounts: [
+			{
+				title: null,
+				iban: null,
+				isSavingAccount: false
+			}
+		],
 		monetaryDescription: "",
 		iban: "",
 		apiKey: "",
@@ -21,7 +27,11 @@ Module.register("MMM-bunq", {
 
 	start: function () {
 		var self = this;
+		this.displayStart = true;
+		this.usingOldMethode = false;
+		this.usingNewMethode = false;
 		this.finalSaldo = 0;
+		this.finalData = [];
 
 		this.sendSocketNotification('HERE_IS_YOUR_CONFIG', this.config);
 		setInterval(function () {
@@ -31,11 +41,33 @@ Module.register("MMM-bunq", {
 	},
 
 	getDom: function () {
-
-		// create element wrapper for show into the module
 		var wrapper = document.createElement("div");
-		wrapper.id = "saldo";
-		wrapper.innerText = this.config.title + ": " + this.finalSaldo + this.config.unit;
+
+		if (this.displayStart) {
+			const start = document.createElement("div");
+			start.id = "MMM-bunq-saldo";
+			start.innerText = this.config.title + ": " + this.finalSaldo + this.config.unit;
+			wrapper.appendChild(start);
+		}
+		if (this.usingOldMethode) {
+			const start = document.createElement("div");
+			start.id = "MMM-bunq-saldo";
+			start.innerText = this.config.title + ": " + this.finalSaldo + this.config.unit;
+			wrapper.appendChild(start);
+		}
+		if (this.usingNewMethode) {
+			this.finalData.forEach(account => {
+				if (!account.isSavingAccount) {
+					console.log(account)
+					const div = document.createElement("div");
+					div.id = "MMM-bunq-saldo";
+					div.innerText = this.config.title + ": " + account.saldo + this.config.unit;
+					wrapper.appendChild(div);
+				} else {
+
+				}
+			})
+		}
 
 		return wrapper;
 	},
@@ -64,6 +96,20 @@ Module.register("MMM-bunq", {
 		if (notification === "HERE_IS_FINAL_SALDO") {
 			this.finalSaldo = payload;
 			this.updateDom();
+		}
+		switch (notification) {
+			case "HERE_IS_FINAL_SALDO":
+				this.finalSaldo = payload;
+				this.displayStart = false;
+				this.usingOldMethode = true;
+				this.updateDom();
+				break;
+			case "HERE_IS_FINAL_SALDO_ARRAY":
+				this.finalData = payload
+				this.displayStart = false;
+				this.usingNewMethode = true;
+				this.updateDom();
+				break;
 		}
 	},
 

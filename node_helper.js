@@ -22,6 +22,9 @@ module.exports = NodeHelper.create({
 		this.sessionToken = null;
 		this.deviceId = null;
 		this.iban = null
+		//this.monetaryAccounts = []
+
+		this.finalData = []
 	},
 
 	socketNotificationReceived: function (notification, payload) {
@@ -30,6 +33,10 @@ module.exports = NodeHelper.create({
 				this.apiKey = payload.apiKey;
 				this.monetaryDescription = payload.monetaryDescription;
 				this.iban = payload.iban;
+				this.monetaryAccounts = payload.monetaryAccounts
+				payload.monetaryAccounts.forEach(element => {
+					console.log(element)
+				});
 				this.crypto();
 				break;
 			case "UPDATE_PLEASE":
@@ -157,23 +164,84 @@ module.exports = NodeHelper.create({
 		this.getSaldo();
 	},
 
+	getSavingAccount: function (iban) {
+		fetch(`https://api.bunq.com/v1/user/${this.userId}/monetary-account-savings`, {
+			headers: {
+				'User-Agent': 'MagicMirror',
+				'X-Bunq-Client-Authentication': this.sessionToken,
+			}
+		})
+			.then(response => response.json())
+			.then(data => this.handleSavingAccountData(iban, data))
+			.catch(error => console.log('Error: ', error));
+	},
+
+	handleSavingAccountData: function (iban, data) {
+		//console.log(iban)
+		data.Response.forEach(saving => {
+			saving.MonetaryAccountSavings.alias.forEach(alias => {
+				if (alias.type === "IBAN" && alias.value === iban) {
+					this.finalData = [
+						...this.finalData,
+						{
+							isSavingAccount: true,
+							saldo: saving.MonetaryAccountSavings.balance.value,
+							goal: saving.MonetaryAccountSavings.savings_goal.value,
+							progress: saving.MonetaryAccountSavings.savings_goal_progress
+						}
+					]
+				}
+			})
+		})
+		this.sendSocketNotification("HERE_IS_FINAL_SALDO_ARRAY", this.finalData);
+	},
+
+
+
 	handleSaldoData: function (data) {
-		this.sendSocketNotification("HERE_IS_SALDO", data);
 		let accounts = data.Response;
 		let isFound = false;
-		for (let i = 0; i < accounts.length && !isFound; i++) {
-			if (this.iban !== "") {
-				for (let j = 0; j < accounts[i].MonetaryAccountBank.alias.length && !isFound; j++) {
-					if (accounts[i].MonetaryAccountBank.alias[j].type === "IBAN" && accounts[i].MonetaryAccountBank.alias[j].value === this.iban) {
+
+		if (this.monetaryAccounts[0].iban !== null) {
+			this.monetaryAccounts.forEach(monetaryAccount => {
+				if (monetaryAccount.isSavingAccount) {
+					this.getSavingAccount(monetaryAccount.iban)
+				} else {
+					accounts.forEach(account => {
+						if (account.MonetaryAccountBank !== undefined) {
+							account.MonetaryAccountBank.alias.forEach(alias => {
+								if (alias.type === "IBAN" && alias.value === monetaryAccount.iban) {
+									this.finalData = [
+										...this.finalData,
+										{
+											isSavingAccount: false,
+											title: account.MonetaryAccountBank.description,
+											saldo: account.MonetaryAccountBank.balance.value
+										}
+									]
+								}
+							})
+						}
+					})
+				}
+			});
+		} else {
+			// OLD VERSION
+			for (let i = 0; i < accounts.length && !isFound; i++) {
+				if (this.iban !== "") {
+					for (let j = 0; j < accounts[i].MonetaryAccountBank.alias.length && !isFound; j++) {
+						if (accounts[i].MonetaryAccountBank.alias[j].type === "IBAN" && accounts[i].MonetaryAccountBank.alias[j].value === this.iban) {
+							console.log(accounts[i].MonetaryAccountBank)
+							this.sendSocketNotification("HERE_IS_FINAL_SALDO", accounts[i].MonetaryAccountBank.balance.value);
+							isFound = true;
+						}
+					}
+				} else {
+					// OLD!!!
+					if (accounts[i].MonetaryAccountBank.description != undefined && accounts[i].MonetaryAccountBank.description === this.monetaryDescription) {
 						this.sendSocketNotification("HERE_IS_FINAL_SALDO", accounts[i].MonetaryAccountBank.balance.value);
 						isFound = true;
 					}
-				}
-			} else {
-				// OLD!!!
-				if (accounts[i].MonetaryAccountBank.description != undefined && accounts[i].MonetaryAccountBank.description === this.monetaryDescription) {
-					this.sendSocketNotification("HERE_IS_FINAL_SALDO", accounts[i].MonetaryAccountBank.balance.value);
-					isFound = true;
 				}
 			}
 		}

@@ -38,10 +38,21 @@ var config = {
     {
       module: "MMM-bunq",
       position: "top_left",
-      header: "Joint Account",
+      header: "BUNQ Account",
       config: {
-        iban: "YOUR_IBAN",
-        apiKey: "YOUR_API_KEY"
+        apiKey: "YOUR_API_KEY",
+		monetaryAccounts: [
+			{
+				title: "Joint Account",
+				iban: "YOUR_IBAN",
+				isSavingAccount: false
+			},
+			{
+				iban: "YOUR_IBAN",
+				isSavingAccount: true
+			}
+			// ...
+		],
       }
     }
   ]
@@ -54,6 +65,7 @@ var config = {
 | --------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `apiKey`              | **_Required_** Your bunq API Key goes here.                                                                                |
 | `iban`                | **_Required_** IBAN of your bunq monetary account, which will appear on the screen.                                        |
+| `monetaryAccounts` | **_Optional_**  | If you want to show more accounts, you can define an array with IBAN's <br><br>**Type:** `Array` |
 | `title`               | **_Optional_** Title in front of the balance. The title will be uppercase <br><br>**Type:** `String` <br>Default `Balance` |
 | `unit`                | **_Optional_** Unit of the balance <br><br>**Type:** `String` <br>Default `€` (Euro)                                       |
 | `updateInterval`      | **_Optional_** Refresh rate <br><br>**Type:** `int`(milliseconds) <br>Default 60000 milliseconds (1 minute)                |
