@@ -8,6 +8,11 @@ This module will show your [bunq](https://www.bunq.com/) account balance on the 
 
 ![Screenshot](img/img.png)
 
+## Development
+The next step is to implement the saving accounts from BUNQ. Here are some ideas:
+
+![Ideas](img/idea.png)
+
 ## Installation
 
 This module is pretty simple to set up. You simply need to clone the module into your modules folder (like other modules).
