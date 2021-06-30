@@ -208,27 +208,41 @@ module.exports = NodeHelper.create({
 					accounts.forEach(account => {
 						if (account.MonetaryAccountBank !== undefined) {
 							account.MonetaryAccountBank.alias.forEach(alias => {
+								// if IBAN is equal to looking IBAN
 								if (alias.type === "IBAN" && alias.value === monetaryAccount.iban) {
-									if (monetaryAccount.title === undefined) {
-										this.finalData = [
-											...this.finalData,
-											{
-												isSavingAccount: false,
-												title: account.MonetaryAccountBank.description,
-												saldo: account.MonetaryAccountBank.balance.value
-											}
-										]
+									// if showTitle is not defined or showTitle === true
+									if (monetaryAccount.showTitle === undefined || monetaryAccount.showTitle === true) {
+										// if title is not define use title from bunq
+										if (monetaryAccount.title === undefined) {
+											this.finalData = [
+												...this.finalData,
+												{
+													isSavingAccount: false,
+													title: account.MonetaryAccountBank.description,
+													saldo: account.MonetaryAccountBank.balance.value
+												}
+											]
+										} else {
+											this.finalData = [
+												...this.finalData,
+												{
+													isSavingAccount: false,
+													title: monetaryAccount.title,
+													saldo: account.MonetaryAccountBank.balance.value
+												}
+											]
+										}
 									} else {
+										// if title should be hidden, return title undefined
 										this.finalData = [
 											...this.finalData,
 											{
 												isSavingAccount: false,
-												title: monetaryAccount.title,
+												title: undefined,
 												saldo: account.MonetaryAccountBank.balance.value
 											}
 										]
 									}
-
 								}
 							})
 						}
