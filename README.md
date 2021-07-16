@@ -50,10 +50,10 @@ var config = {
 
 ## Configuration options
 
-| Option                | Description                                                                                                                |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `apiKey`              | **_Required_** Your bunq API Key goes here.                                                                                |
-| `iban`                | **_Required_** IBAN of your bunq monetary account, which will appear on the screen.                                        |
-| `title`               | **_Optional_** Title in front of the balance. The title will be uppercase <br><br>**Type:** `String` <br>Default `Balance` |
-| `unit`                | **_Optional_** Unit of the balance <br><br>**Type:** `String` <br>Default `€` (Euro)                                       |
-| `updateInterval`      | **_Optional_** Refresh rate <br><br>**Type:** `int`(milliseconds) <br>Default 60000 milliseconds (1 minute)                |
+| Option           | Description                                                                                                                |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `apiKey`         | **_Required_** Your bunq API Key goes here.                                                                                |
+| `iban`           | **_Required_** IBAN of your bunq monetary account, which will appear on the screen.                                        |
+| `title`          | **_Optional_** Title in front of the balance. The title will be uppercase <br><br>**Type:** `String` <br>Default `Balance` |
+| `unit`           | **_Optional_** Unit of the balance <br><br>**Type:** `String` <br>Default `€` (Euro)                                       |
+| `updateInterval` | **_Optional_** Refresh rate <br><br>**Type:** `int`(milliseconds) <br>Default 60000 milliseconds (1 minute)                |
