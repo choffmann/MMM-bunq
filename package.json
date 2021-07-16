@@ -6,22 +6,49 @@
   "author": "Cedrik Hoffmann",
   "license": "MIT",
   "devDependencies": {
-    "crypto": "latest",
     "electron-rebuild": "^2.3.2",
+    "chai": "^4.2.0",
+    "eslint": "^7.15.0",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-plugin-jsdoc": "^30.7.8",
+    "eslint-plugin-prettier": "^3.3.1",
     "grunt": "latest",
     "grunt-eslint": "latest",
     "grunt-jsonlint": "latest",
     "grunt-markdownlint": "^1.0.13",
     "grunt-stylelint": "latest",
     "grunt-yamllint": "latest",
-    "node-fetch": "^2.6.1",
+    "mocha": "^8.2.1",
+    "module-alias": "^2.2.2",
+    "prettier": "2.2.1",
+    "stylelint": "^13.8.0",
+    "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-standard": "latest",
+    "stylelint-prettier": "^1.1.2",
     "time-grunt": "latest"
   },
   "scripts": {
-    "postinstall": "./node_modules/.bin/electron-rebuild"
+    "postinstall": "./node_modules/.bin/electron-rebuild",
+    "test": "npm run test:prettier && npm run test:js && npm run test:css",
+    "lint": "npm run lint:prettier && npm run lint:js && npm run lint:css",
+    "test:unit": "NODE_ENV=test mocha tests --recursive",
+    "test:prettier": "prettier --check **/*.{js,css,json,md,yml}",
+    "test:js": "eslint *.js --config .eslintrc.json --quiet",
+    "test:css": "stylelint **/*.css --config .stylelintrc.json",
+    "lint:prettier": "prettier --write **/*.{js,css,json,md,yml}",
+    "lint:js": "eslint *.js --config .eslintrc.json --fix",
+    "lint:css": "stylelint **/*.css --config .stylelintrc.json --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/choffmann/MMM-bunq.git"
+  },
+  "bugs": {
+    "url": "https://github.com/choffmann/MMM-bunq/issues"
   },
   "dependencies": {
-    "request": "latest"
+    "request": "latest",
+    "node-fetch": "^2.6.1",
+    "crypto": "latest"
   }
 }
