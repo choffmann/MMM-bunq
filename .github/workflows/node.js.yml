@@ -27,7 +27,7 @@ jobs:
       - name: Checkout Module repo
         uses: actions/checkout@v2
         with:
-          path: MagicMirror/modules/MMM-YT-SubCount
+          path: MagicMirror/modules/MMM-bunq
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
@@ -42,6 +42,6 @@ jobs:
           npm ci
       - name: Run tests
         run: |
-          cd MagicMirror/modules/MMM-YT-SubCount
+          cd MagicMirror/modules/MMM-bunq
           npm ci
           npm run test
