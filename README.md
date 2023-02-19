@@ -12,16 +12,16 @@ This module will show your [bunq](https://www.bunq.com/) account balance on the 
 
 This module is pretty simple to set up. You simply need to clone the module into your modules folder (like other modules).
 
-```
-$ cd MagicMirror/modules
-$ git clone https://github.com/choffmann/MMM-bunq.git
+```bash
+cd MagicMirror/modules
+git clone https://github.com/choffmann/MMM-bunq.git
 ```
 
 After you clone the repositories, you have to install the `node modules`
 
-```
-$ cd ./MMM-bunq
-$ npm install
+```bash
+cd ./MMM-bunq
+npm install
 ```
 
 ## Get your API Key
@@ -33,7 +33,7 @@ To use this module, you need a API key from bunq. You can create an API key eith
 To use this module, add the following configuration block to the modules array in the `config/config.js` file:
 
 ```js
-var config = {
+let config = {
   modules: [
     {
       module: "MMM-bunq",
