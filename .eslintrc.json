@@ -9,7 +9,6 @@
   "env": {
     "browser": true,
     "es6": true,
-    "mocha": true,
     "node": true
   },
   "globals": {
@@ -21,7 +20,7 @@
   },
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2017,
+    "ecmaVersion": 2020,
     "ecmaFeatures": {
       "globalReturn": true
     }
