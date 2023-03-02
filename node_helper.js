@@ -5,197 +5,143 @@
  * MIT Licensed.
  */
 
-var NodeHelper = require("node_helper");
-var crypto = require("crypto");
+const NodeHelper = require("node_helper");
+const crypto = require("crypto");
+const Log = require("logger");
 const fetch = require("node-fetch");
-const request = require("request");
 
 module.exports = NodeHelper.create({
-  start: function () {
-    this.monetaryDescription = null;
-    this.apiKey = null;
-    this.publicKey = null;
-    this.privateKey = null;
-    this.instToken = null;
-    this.userId = null;
-    this.sessionToken = null;
-    this.deviceId = null;
-    this.iban = null;
-  },
+	start: function() {
+		//this.url = "https://public-api.sandbox.bunq.com/v1";
+		this.url = "https://api.bunq.com/v1";
+		this.monetaryDescription = null;
+		this.apiKey = null;
+		this.publicKey = null;
+		this.privateKey = null;
+		this.instToken = null;
+		this.userId = null;
+		this.sessionToken = null;
+		this.deviceId = null;
+		this.iban = null;
+		Log.log(`${this.name} is started`);
+	},
 
-  socketNotificationReceived: function (notification, payload) {
-    switch (notification) {
-      case "HERE_IS_YOUR_CONFIG":
-        this.apiKey = payload.apiKey;
-        this.monetaryDescription = payload.monetaryDescription;
-        this.iban = payload.iban;
-        this.crypto();
-        break;
-      case "UPDATE_PLEASE":
-        this.crypto();
-        break;
-    }
-  },
+	socketNotificationReceived: async function(notification, payload) {
+		switch (notification) {
+			case "HERE_IS_YOUR_CONFIG":
+				this.apiKey = payload.apiKey;
+				this.monetaryDescription = payload.monetaryDescription;
+				this.iban = payload.iban;
+				await this.makeRequest();
+				break;
+			case "UPDATE_PLEASE":
+				await this.makeRequest();
+				break;
+		}
+	},
 
-  crypto: function () {
-    const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
-      modulusLength: 2048, // the length of your key in bits
-      publicKeyEncoding: {
-        type: "spki", // recommended to be 'spki' by the Node.js docs
-        format: "pem"
-      },
-      privateKeyEncoding: {
-        type: "pkcs8", // recommended to be 'pkcs8' by the Node.js docs
-        format: "pem"
-      }
-    });
+	makeRequest: async function() {
+		this.crypto()
+			.then(_ => this.installation())
+			.then(_ => this.device())
+			.then(_ => this.session())
+			.then(_ => this.getSaldo())
+			.catch(this.handleError);
+	},
 
-    this.publicKey = publicKey;
-    this.privateKey = privateKey;
+	crypto: async function() {
+		const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
+			modulusLength: 2048, // the length of your key in bits
+			publicKeyEncoding: {
+				type: "spki", // recommended to be 'spki' by the Node.js docs
+				format: "pem"
+			}, privateKeyEncoding: {
+				type: "pkcs8", // recommended to be 'pkcs8' by the Node.js docs
+				format: "pem"
+			}
+		});
 
-    this.installation();
-  },
+		this.publicKey = publicKey;
+		this.privateKey = privateKey;
+	},
 
-  installation: function () {
-    const body = JSON.stringify({ client_public_key: this.publicKey });
-    const options = {
-      method: "POST",
-      port: 443,
-      url: "https://api.bunq.com/v1/installation",
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-cache",
-        "User-Agent": "MagicMirror",
-        "X-Bunq-Language": "de_DE",
-        "X-Bunq-Region": "de_DE",
-        "X-Bunq-Request-Id": Math.random() * 9,
-        "X-Bunq-Geolocation": "0 0 0 0 000"
-      }
-    };
+	fetchData: async function(path, options, callback) {
+		await fetch(this.url + path, options)
+			.then((response) => response.json())
+			.then((data) => callback(data))
+			.catch((error) => this.handleError(error));
+	},
 
-    request.post(
-      "https://api.bunq.com/v1/installation",
-      {
-        json: { client_public_key: this.publicKey }
-      },
-      (err, res, data) => {
-        if (!err && res.statusCode === 200) {
-          this.handleInstData(data);
-        } else {
-          console.log(err);
-        }
-      }
-    );
-  },
+	handleError: function(error) {
+		Log.error(error);
+	},
 
-  device: function () {
-    const body = JSON.stringify({
-      description: "MagicMirror",
-      secret: this.apiKey
-    });
-    fetch("https://api.bunq.com/v1/device-server", {
-      method: "POST",
-      headers: {
-        "User-Agent": "MagicMirror",
-        "X-Bunq-Client-Authentication": this.instToken
-      },
-      body: body
-    })
-      .then((response) => response.json())
-      .then((data) => this.handleDeviceData(data))
-      .catch((error) => console.log("Error: ", error));
-  },
+	installation: async function() {
+		const options = {
+			method: "POST", headers: {
+				"Content-Type": "application/json", "Cache-Control": "no-cache", "User-Agent": "MagicMirror", "X-Bunq-Language": "de_DE", "X-Bunq-Region": "de_DE", "X-Bunq-Request-Id": Math.random() * 9, "X-Bunq-Geolocation": "0 0 0 0 000"
+			}, body: JSON.stringify({ client_public_key: this.publicKey })
+		};
+		await this.fetchData("/installation", options, data => this.handleInstData(data));
+	},
 
-  session: function () {
-    const body = JSON.stringify({
-      secret: this.apiKey
-    });
+	device: async function() {
+		const options = {
+			method: "POST", headers: {
+				"User-Agent": "MagicMirror", "X-Bunq-Client-Authentication": this.instToken
+			}, body: JSON.stringify({
+				description: "MagicMirror", secret: this.apiKey
+			})
+		};
+		await this.fetchData("/device-server", options, data => this.handleDeviceData(data));
+	},
 
-    const sign = crypto.createSign("sha256");
-    sign.update(body);
-    const sig = sign.sign(this.privateKey, "base64");
+	session: async function() {
+		const body = JSON.stringify({ secret: this.apiKey });
+		const sign = crypto.createSign("sha256");
+		sign.update(body);
+		const sig = sign.sign(this.privateKey, "base64");
+		const options = {
+			method: "POST", headers: {
+				"X-Bunq-Client-Signature": sig, "X-Bunq-Client-Authentication": this.instToken
+			}, body: body
+		};
 
-    fetch("https://api.bunq.com/v1/session-server", {
-      method: "POST",
-      headers: {
-        "X-Bunq-Client-Signature": sig,
-        "X-Bunq-Client-Authentication": this.instToken
-      },
-      body: body
-    })
-      .then((response) => response.json())
-      .then((data) => this.handleSessionData(data))
-      .catch((error) => console.log("Error: ", error));
-  },
+		await this.fetchData("/session-server", options, data => this.handleSessionData(data));
+	},
 
-  getSaldo: function () {
-    fetch("https://api.bunq.com/v1/user/" + this.userId + "/monetary-account", {
-      method: "GET",
-      headers: {
-        "User-Agent": "MagicMirror",
-        "X-Bunq-Client-Authentication": this.sessionToken
-      }
-    })
-      .then((response) => response.json())
-      .then((data) => this.handleSaldoData(data))
-      .catch((error) => console.log("Error: ", error));
-  },
+	getSaldo: async function() {
+		const options = {
+			method: "GET", headers: {
+				"User-Agent": "MagicMirror", "X-Bunq-Client-Authentication": this.sessionToken
+			}
+		};
+		await this.fetchData(`/user/${this.userId}/monetary-account`, options, data => this.handleSaldoData(data));
+	},
 
-  handleInstData: function (data) {
-    this.sendSocketNotification("HERE_IS_INST_TOKEN", data);
-    this.instToken = data.Response[1].Token.token;
-    this.device();
-  },
+	handleInstData: function(data) {
+		this.sendSocketNotification("HERE_IS_INST_TOKEN", data);
+		this.instToken = data.Response[1].Token.token;
+	},
 
-  handleDeviceData: function (data) {
-    this.sendSocketNotification("HERE_IS_DEVICE_TOKEN", data);
-    this.deviceId = data.Response[0].Id.id;
-    this.session();
-  },
+	handleDeviceData: function(data) {
+		this.sendSocketNotification("HERE_IS_DEVICE_TOKEN", data);
+		this.deviceId = data.Response[0].Id.id;
+	},
 
-  handleSessionData: function (data) {
-    this.sendSocketNotification("HERE_IS_SESSION", data);
-    this.sessionToken = data.Response[1].Token.token;
-    this.userId = data.Response[2].UserPerson.id;
-    this.getSaldo();
-  },
+	handleSessionData: function(data) {
+		this.sendSocketNotification("HERE_IS_SESSION", data);
+		this.sessionToken = data.Response[1].Token.token;
+		this.userId = data.Response[2].UserPerson.id;
+	},
 
-  handleSaldoData: function (data) {
-    this.sendSocketNotification("HERE_IS_SALDO", data);
-    let accounts = data.Response;
-    let isFound = false;
-    for (let i = 0; i < accounts.length && !isFound; i++) {
-      if (this.iban !== "") {
-        for (
-          let j = 0;
-          j < accounts[i].MonetaryAccountBank.alias.length && !isFound;
-          j++
-        ) {
-          if (
-            accounts[i].MonetaryAccountBank.alias[j].type === "IBAN" &&
-            accounts[i].MonetaryAccountBank.alias[j].value === this.iban
-          ) {
-            this.sendSocketNotification(
-              "HERE_IS_FINAL_SALDO",
-              accounts[i].MonetaryAccountBank.balance.value
-            );
-            isFound = true;
-          }
-        }
-      } else {
-        // OLD!!!
-        if (
-          accounts[i].MonetaryAccountBank.description !== undefined &&
-          accounts[i].MonetaryAccountBank.description ===
-            this.monetaryDescription
-        ) {
-          this.sendSocketNotification(
-            "HERE_IS_FINAL_SALDO",
-            accounts[i].MonetaryAccountBank.balance.value
-          );
-          isFound = true;
-        }
-      }
-    }
-  }
+	handleSaldoData: function(data) {
+		this.sendSocketNotification("HERE_IS_SALDO", data);
+		const accounts = data.Response.filter(obj => obj.MonetaryAccountBank !== undefined);
+		accounts.forEach(account => {
+			if(account.MonetaryAccountBank.alias[0].value === this.iban) {
+				this.sendSocketNotification("HERE_IS_FINAL_SALDO", account.MonetaryAccountBank.balance.value);
+			}
+		})
+	}
 });
