@@ -33,7 +33,6 @@
     "url": "https://github.com/choffmann/MMM-bunq/issues"
   },
   "dependencies": {
-    "request": "latest",
     "crypto": "latest",
     "node-fetch": "^2.6.1"
   }
