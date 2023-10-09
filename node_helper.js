@@ -1,4 +1,4 @@
-/* Magic Mirror
+/* MagicMirror²
  * Node Helper: MMM-bunq
  *
  * By Cedrik Hoffmann

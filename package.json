@@ -1,7 +1,7 @@
 {
   "name": "mmm-bunq",
   "version": "1.0.1",
-  "description": "Show Bunt Information on the MagicMirror",
+  "description": "Show Bunt Information on the MagicMirror²",
   "main": "MMM-bunq.js",
   "author": "Cedrik Hoffmann",
   "license": "MIT",

@@ -1,4 +1,4 @@
-/* Magic Mirror
+/* MagicMirror²
  * Module: MMM-bunq
  *
  * By Cedrik Hoffmann
@@ -15,7 +15,7 @@ Module.register("MMM-bunq", {
     unit: "€"
   },
 
-  requiresVersion: "2.1.0", // Required version of MagicMirror
+  requiresVersion: "2.1.0", // Required version of MagicMirror²
 
   start: function () {
     var self = this;
