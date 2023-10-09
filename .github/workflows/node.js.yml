@@ -19,13 +19,13 @@ jobs:
 
     steps:
       - name: Checkout MagicMirror² repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: MichMich/MagicMirror
           path: MagicMirror
 
       - name: Checkout Module repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: MagicMirror/modules/MMM-bunq
 
