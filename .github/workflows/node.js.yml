@@ -15,17 +15,17 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [18.x, 20.x]
 
     steps:
-      - name: Checkout MagicMirror repo
-        uses: actions/checkout@v3
+      - name: Checkout MagicMirror² repo
+        uses: actions/checkout@v4
         with:
           repository: MichMich/MagicMirror
           path: MagicMirror
 
       - name: Checkout Module repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: MagicMirror/modules/MMM-bunq
 
@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install MagicMirror
+      - name: Install MagicMirror²
         run: |
           cd MagicMirror
           Xvfb :99 -screen 0 1024x768x16 &

@@ -6,9 +6,10 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.0.1]
 
 Maintenance update
-  - dependencies updated
-  - linting
-  - workflow update
+
+- dependencies updated
+- linting
+- workflow update
 
 ## [1.0.0]
 
